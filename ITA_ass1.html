@@ -27,9 +27,10 @@ Not supported on browser
 
 <script src="jquery-3.3.1.min.js"></script>
 <script>
-$(document).ready(function(){
+$(document).ready(function({
+    var $myCanvas = $('myCanvas');
 
-});
+    
 </script>
 
 
@@ -258,10 +259,12 @@ ctx.arc(300,300,10,0,2*Math.PI);
 ctx.fill();
 
 
+
+ctx.fillStyle = "99cc00";
 ctx.beginPath();
-ctx.moveTo(30,60);
-ctx.beizerCurveTo(60,30,)
+ctx.arc(210,100,20,0,2*Math.PI);
 ctx.fill();
+ctx.stroke();
 
 
 </script>
