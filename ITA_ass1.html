@@ -28,11 +28,17 @@ Not supported on browser
 <script>
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
+var running = false;
+var raf;
+var line;
+var placed = false;
 
 var strikerX = 150;
 var strikerY = 100;
 function drawBoard()
 {
+    ctx.clearRect(0,0, canvas.width, canvas.height);
+
  ctx.strokeStyle = "#4d2600";
  ctx.lineWidth   = 30;
  ctx.beginPath();
@@ -284,33 +290,75 @@ var striker = {
   }
 
 };
-striker.draw();
 
-canvas.addEventListener('mousedown',draw,false);
+canvas.addEventListener('click', function(e) {
+  if(!running && !placed) {
+    placed = true;
+    point(e);
+  }
+});
 
-function draw( e ) 
+function point(e)
+{
+    ctx.beginPath();
+    ctx.moveTo(strikerX,strikerY);
+    ctx.lineTo(e.clientX,e.clientY);
+    ctx.closePath();
+    ctx.stroke();
+    line = window.requestAnimationFrame(point);
+}
+    //alert("Should work");
+//canvas.addEventListener('mousedown',draw,false);
+
+function draw() 
 {
     //alert("fgbf");
-    ctx.clearRect(0,0, canvas.width, canvas.height);
-    
+    drawBoard();
+
+    striker.draw();
     strikerX += striker.vx;
     strikerY += striker.vy;
-    drawBoard();
-    striker.draw();
+    
+    
     if (strikerY + striker.vy > (canvas.height-30)  || strikerY + striker.vy < 30)
     {
         striker.vy = -striker.vy;
+        striker.vy *=0.5;
     }
     if (strikerX + striker.vx > (canvas.width-30) || strikerX + striker.vx < 30)
     {
         striker.vx = -striker.vx;
+        striker.vx *=0.5;
     }
     raf = window.requestAnimationFrame(draw);
 }
 
+canvas.addEventListener('mousemove', function(e) {
+  if (!running && !placed) {
+    drawBoard();
+    strikerX = e.clientX;
+    strikerY = e.clientY;
+    striker.draw();
+  }
+});
 
 
 
+canvas.addEventListener('dblclick', function(e) {
+  if (!running && placed) {
+    raf = window.requestAnimationFrame(draw);
+    running = true;
+    placed = false;
+  }
+});
+
+canvas.addEventListener('mouseout', function(e) {
+  window.cancelAnimationFrame(raf);
+  running = false;
+});
+
+
+striker.draw();
 
 
 
