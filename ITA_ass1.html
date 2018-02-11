@@ -32,6 +32,7 @@ var running = false;
 var raf;
 var line;
 var placed = false;
+var temp; //just a temp variable to exchange
 
 var strikerMX; //This are the slope, which gives direction to the striker.
 var strikerMY;
@@ -76,24 +77,38 @@ var coin = {
     if(!this.hit) { 
       this.hit = true; 
     }
+    else {
+      temp = striker.vx;
+      striker.vx = this.vx;
+      this.vx = temp;
+
+      temp = striker.vy;
+      striker.vy = this.vy;
+      this.vy = temp;
+
+    }
     //alert("Set to run");
 
+    
+    //if ()
+  },
+  motion: function() {
+    
     if (this.y + this.vy > (canvas.height-30)  || this.y + this.vy < 30)
     {
         this.vy = -this.vy;
         this.vy *=0.5;
-        alert("speed decrease");
+        //alert("speed decrease");
     }
     if (this.x + this.vx > (canvas.width-30) || this.x + this.vx < 30)
     {
         this.vx = -this.vx;
         this.vx *=0.5;
-        alert("speed decrease");
+        //alert("speed decrease");
     }
 
     this.x += this.vx;
     this.y += this.vy;
-    //if ()
   }
 };
 
@@ -365,7 +380,7 @@ function drawBoard() {
  coin.draw();
  if(coin.hit)
  {
-    coin.collision();
+    coin.motion();
  }
 }
 
