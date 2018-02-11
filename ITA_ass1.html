@@ -47,7 +47,7 @@ var striker = {
     draw: function() {
     ctx.beginPath();
     ctx.arc(strikerX, strikerY, this.radius, 0, Math.PI * 2, true);
-    //.closePath();
+    ctx.closePath();
     ctx.fillStyle = "07a387";
     ctx.fill();
   }
@@ -58,9 +58,10 @@ var coin = {
   x: 200,
   y: 100,
   vx: 5,
-  vy: 2,
-  radius: 15,
+  vy: 5,
+  radius: 10,
   color: '#000000',
+  hit: false,
   draw: function() {
     ctx.beginPath();
     ctx.arc(this.x, this.y, 5, 0, Math.PI * 2, true);
@@ -70,15 +71,36 @@ var coin = {
     ctx.lineWidth = 4;
     ctx.stroke();
     ctx.closePath();
-    
-    
+  },
+  collision: function() {
+    if(!this.hit) { 
+      this.hit = true; 
+    }
+    //alert("Set to run");
+
+    if (this.y + this.vy > (canvas.height-30)  || this.y + this.vy < 30)
+    {
+        this.vy = -this.vy;
+        this.vy *=0.5;
+        alert("speed decrease");
+    }
+    if (this.x + this.vx > (canvas.width-30) || this.x + this.vx < 30)
+    {
+        this.vx = -this.vx;
+        this.vx *=0.5;
+        alert("speed decrease");
+    }
+
+    this.x += this.vx;
+    this.y += this.vy;
+    //if ()
   }
 };
 
+var colldist = Math.pow((striker.radius + coin.radius),2);
 
-function drawBoard()
-{
-    ctx.clearRect(0,0, canvas.width, canvas.height);
+function drawBoard() {
+  ctx.clearRect(0,0, canvas.width, canvas.height);
 
  ctx.strokeStyle = "#4d2600";
  ctx.lineWidth   = 30;
@@ -341,13 +363,13 @@ function drawBoard()
  ctx.fill();
 
  coin.draw();
-
-
+ if(coin.hit)
+ {
+    coin.collision();
+ }
 }
 
 drawBoard();
-
-
 
 function getMousePos(canvas, evt) {
     var rect = canvas.getBoundingClientRect();
@@ -383,10 +405,27 @@ function draw()
     //alert("fgbf");
     drawBoard();
 
+    /*if(coin.hit)
+    {
+      if (coin.y + coin.vy > (canvas.height-30)  || coin.y + coin.vy < 30)
+      {
+        coin.vy = -coin.vy;
+        coin.vy *=0.5;
+        alert("speed decrease");
+      }
+      if (coin.x + coin.vx > (canvas.width-30) || coin.x + coin.vx < 30)
+      {
+        coin.vx = -coin.vx;
+        coin.vx *=0.5;
+        alert("speed decrease");
+      }
+
+      coin.x += coin.vx;
+      coin.y += coin.vy;
+    }*/
     striker.draw();
     coin.draw();
-    strikerX += striker.vx;
-    strikerY += striker.vy;
+    
     
     
     if (strikerY + striker.vy > (canvas.height-30)  || strikerY + striker.vy < 30)
@@ -399,6 +438,19 @@ function draw()
         striker.vx = -striker.vx;
         striker.vx *=0.5;
     }
+
+    var dist = Math.pow((strikerY-coin.y),2) + Math.pow((strikerX-coin.x),2);
+
+    if (dist <= colldist)
+    {
+      //alert("collision detected" + " striker pos " + strikerX + " " + strikerY + " coin pos " + coin.x + " " + coin.y);
+        coin.collision();
+
+      
+    }
+
+    strikerX += striker.vx;
+    strikerY += striker.vy;
     raf = window.requestAnimationFrame(draw);
 }
 
@@ -415,7 +467,7 @@ canvas.addEventListener('mousemove', function(e) {
 function direction (mouseX,mouseY) {
   //alert(mouseY);
   striker.vx = (-1)*(mouseX - strikerX);
-  striker.vy = (-1)*(mouseY - strikerY);
+  striker.vy = (-1)*(mouseY - strikerY); //Find in which direction the striker has to move
 
 
 }
@@ -426,12 +478,13 @@ canvas.addEventListener('dblclick', function(e) {
     raf = window.requestAnimationFrame(draw);
     running = true;
     placed = false;
-  }
+  } //Set the striker to run
 });
 
 canvas.addEventListener('mouseout', function(e) {
   window.cancelAnimationFrame(raf);
   running = false;
+  coin.hit = false;
 });
 
 
