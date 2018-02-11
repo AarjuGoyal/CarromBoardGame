@@ -38,6 +38,44 @@ var strikerMY;
 
 var strikerX = 150;
 var strikerY = 100;
+
+
+var striker = {
+    vx: 5,
+    vy: 5,
+    radius: 20,
+    draw: function() {
+    ctx.beginPath();
+    ctx.arc(strikerX, strikerY, this.radius, 0, Math.PI * 2, true);
+    //.closePath();
+    ctx.fillStyle = "07a387";
+    ctx.fill();
+  }
+
+};
+
+var coin = {
+  x: 200,
+  y: 100,
+  vx: 5,
+  vy: 2,
+  radius: 15,
+  color: '#000000',
+  draw: function() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, 5, 0, Math.PI * 2, true);
+    ctx.fillStyle = this.color;
+    ctx.fill();
+    ctx.arc(this.x,this.y,10,0,2*Math.PI);
+    ctx.lineWidth = 4;
+    ctx.stroke();
+    ctx.closePath();
+    
+    
+  }
+};
+
+
 function drawBoard()
 {
     ctx.clearRect(0,0, canvas.width, canvas.height);
@@ -270,29 +308,46 @@ function drawBoard()
  ctx.arc(190,410,30,1*Math.PI,0.5*Math.PI);
     ctx.stroke();
 
- ctx.fillStyle = "#000000";
+ ctx.fillStyle = "#68225e";
  ctx.beginPath();
  ctx.arc(300,300,10,0,2*Math.PI);
  ctx.closePath();
  ctx.fill();
 
 
+ //The corner wholes
+ ctx.fillStyle = "#1c0c05";
+ ctx.beginPath();
+ ctx.arc(40,40,20,0,2*Math.PI);
+ ctx.closePath();
+ ctx.fill();
+
+ ctx.fillStyle = "#1c0c05";
+ ctx.beginPath();
+ ctx.arc(560,40,20,0,2*Math.PI);
+ ctx.closePath();
+ ctx.fill();
+
+ ctx.fillStyle = "#1c0c05";
+ ctx.beginPath();
+ ctx.arc(40,560,20,0,2*Math.PI);
+ ctx.closePath();
+ ctx.fill();
+
+ ctx.fillStyle = "#1c0c05";
+ ctx.beginPath();
+ ctx.arc(560,560,20,0,2*Math.PI);
+ ctx.closePath();
+ ctx.fill();
+
+ coin.draw();
+
+
 }
 
 drawBoard();
-var striker = {
-    vx: 5,
-    vy: 5,
-    radius: 20,
-    draw: function() {
-    ctx.beginPath();
-    ctx.arc(strikerX, strikerY, this.radius, 0, Math.PI * 2, true);
-    //.closePath();
-    ctx.fillStyle = "07a387";
-    ctx.fill();
-  }
 
-};
+
 
 function getMousePos(canvas, evt) {
     var rect = canvas.getBoundingClientRect();
@@ -329,6 +384,7 @@ function draw()
     drawBoard();
 
     striker.draw();
+    coin.draw();
     strikerX += striker.vx;
     strikerY += striker.vy;
     
@@ -357,7 +413,7 @@ canvas.addEventListener('mousemove', function(e) {
 
 
 function direction (mouseX,mouseY) {
-  alert(mouseY);
+  //alert(mouseY);
   striker.vx = (-1)*(mouseX - strikerX);
   striker.vy = (-1)*(mouseY - strikerY);
 
@@ -380,7 +436,7 @@ canvas.addEventListener('mouseout', function(e) {
 
 
 striker.draw();
-
+coin.draw();
 
 
 </script>
