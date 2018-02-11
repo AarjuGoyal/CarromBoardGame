@@ -75,7 +75,11 @@ var coin = {
   },
   collision: function() {
     if(!this.hit) { 
-      this.hit = true; 
+      this.hit = true;
+      this.vx = -striker.vx/2;
+      this.vy = -striker.vy/2;
+      striker.vx = striker.vx/2;
+      striker.vy = striker.vy/2; 
     }
     else {
       temp = striker.vx;
@@ -397,21 +401,27 @@ function getMousePos(canvas, evt) {
 canvas.addEventListener('click', function(e) {
   if(!running && !placed) {
     placed = true;
-    point(e);
+    //line = window.requestAnimationFrame(point);
   }
 });
 
-function point(e)
+//canvas.addEventListener('click',point);
+
+/*function point(e)
 {
+    drawBoard();
+    striker.draw();
+
     ctx.beginPath();
     ctx.moveTo(strikerX,strikerY);
-    var pos = getMousePos(canvas, e);
-
-    ctx.lineTo(pos.X,pos.Y);
+    ctx.lineTo(e.clientX,e.clientY);
     ctx.closePath();
+    ctx.lineWidth = 1;
     ctx.stroke();
+
     line = window.requestAnimationFrame(point);
-}
+
+}*/
     //alert("Should work");
 //canvas.addEventListener('mousedown',draw,false);
 
@@ -476,6 +486,9 @@ canvas.addEventListener('mousemove', function(e) {
     strikerY = e.clientY;
     striker.draw();
   }
+  /*if(!running && placed) {
+    point(e);
+  }*/
 });
 
 
